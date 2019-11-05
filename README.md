@@ -31,6 +31,7 @@ Fill in the client id and client secret on lines 6-7 of get-auth-token.py.
 
     On Windows OS you could try something like:
     > python get-auth-token.py > out.txt
+    
     > set /p SPOTIFY_TOKEN=<out.txt
 
     Alternatively, you could copy/paste or run a Linux emulator.
