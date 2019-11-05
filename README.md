@@ -24,9 +24,7 @@ Fill in the client id and client secret on lines 6-7 of get-auth-token.py.
 
 -  `token` - the console output of get-auth-token.py should be entered on lines 4 of both get-playlist-data.py and search-for-artist.py
 
-    This authorization token expires every hour, so to make use of the scripts easier currently the variable is populated using a shell environment variable named SPOTIFY_TOKEN.
-
-    I suggest keeping this method instead of copying and pasting the value.
+    This authorization token expires every hour, so to make use of the scripts easier currently the variable is populated using a shell environment variable named SPOTIFY_TOKEN. I suggest keeping this method instead of copying and pasting the value.
 
     On Linux/Unix environments the  variable can be populated from your terminal by calling:
     > export SPOTIFY_TOKEN=\`python get-auth-token.py\`.
