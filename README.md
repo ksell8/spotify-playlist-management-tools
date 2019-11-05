@@ -7,7 +7,7 @@ A couple of python scripts that makes having too many playlists more manageable.
 Functionality currently includes being able to search your playlists by artist.
 Searching by song is the next to be supported with more to follow.
 
-NOTE: This search is of all playlists you follow/own!
+NOTE: This search is of all playlists you publically follow/own!
 
 ### How do I use the Searcher?
 
