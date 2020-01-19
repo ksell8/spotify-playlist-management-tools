@@ -5,7 +5,7 @@
 A couple of python scripts that makes having too many playlists more manageable.
 
 Functionality currently includes being able to search your playlists by artist.
-Searching by song is the next to be supported with more to follow.
+Searching for playlist and returning average track information is next up for development.
 
 NOTE: This search is of all playlists you publically follow/own!
 
@@ -31,7 +31,7 @@ Fill in the client id and client secret on lines 6-7 of get-auth-token.py.
 
     On Windows OS you could try something like:
     > python get-auth-token.py > out.txt
-    
+
     > set /p SPOTIFY_TOKEN=<out.txt
 
     Alternatively, you could copy/paste or run a Linux emulator.
