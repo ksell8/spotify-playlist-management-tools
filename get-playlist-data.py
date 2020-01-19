@@ -1,15 +1,10 @@
-import requests, json, os
+import requests, json, os, sys
 
-#windows users copy console output of get-auth-token.py here
 token=os.environ.get("SPOTIFY_TOKEN")
-
 header={"Authorization":"Bearer " + token}
 
-#set this to username
-username=''
-
 def get_playlists():
-    url="https://api.spotify.com/v1/"+username+"/playlists"
+    url="https://api.spotify.com/v1/users/ksell8/playlists"
 
     response = requests.get(url, headers=header)
 
@@ -71,9 +66,42 @@ def get_artists_json(playlists_list):
 
     return artist_dict
 
-if __name__ == "__main__":
-    playlists_list = get_playlists()
-    artist_dict = get_artists_json(playlists_list)
+def get_names_json():
+    url="https://api.spotify.com/v1/users/ksell8/playlists"
 
-    with open("artists-on-playlists.json",'w') as f:
-        json.dump(artist_dict, f)
+    response = requests.get(url, headers=header)
+
+    data = response.json()
+    names_dict = {}
+
+    while data["next"]:
+        for playlist in data["items"]:
+            name = playlist["name"]
+            id = playlist["id"]
+            names_dict[name] = id
+        url = data["next"]
+        response = requests.get(url, headers=header)
+        data = response.json()
+
+    #necessary to get last chunk of data
+    for playlist in data["items"]:
+        name = playlist["name"]
+        id = playlist["id"]
+        names_dict[name] = id
+
+    return names_dict
+
+if __name__ == "__main__":
+    try:
+        if sys.argv[1] == "artists":
+            playlists_list = get_playlists()
+            artist_dict = get_artists_json(playlists_list)
+            with open("artists-on-playlists.json",'w') as f:
+                json.dump(artist_dict, f)
+        if sys.argv[1] == "names":
+            names_dict = get_names_json()
+            with open("names-of-playlists.json", "w") as f:
+                json.dump(names_dict, f)
+    except:
+        print("Something went wrong here, remember to include artists || names as a param.")
+        raise
