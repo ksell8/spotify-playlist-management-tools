@@ -1,15 +1,17 @@
-# Spotify Playlist Searcher
+# Spotify Playlist Management Tools
 
-### What is the Spotify Playlist Searcher?
+### What is this project?
 
 A couple of python scripts that makes having too many playlists more manageable.
+
+Personally, I have 300 different playlists on Spotify and with these tools are meant to facilitate ease of management for that abnormal use case.
 
 Functionality currently includes being able to search your playlists by artist.
 Searching for playlist and returning average track information is next up for development.
 
-NOTE: This search is of all playlists you publically follow/own!
+NOTE: This is setup to manage all playlists you publically follow/own!
 
-### How do I use the Searcher?
+### How do I use the Script?
 
 ##### Spotify API Credentials
 
@@ -45,7 +47,7 @@ before expecting search-for-artist.py to run properly.  This may take some time 
 
 The JSON is populated by a dictionary with keys being artist identifiers and values being a list of playlist identifiers that the artists appear on.
 
-##### Calling the Searcher
+##### Calling the Search for Artists Tool
 
 Run ```python search-for-artist.py "<insert artist name here>"``` to return the playlists in which the artist occurs.
 
