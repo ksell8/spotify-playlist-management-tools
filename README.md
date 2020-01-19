@@ -4,7 +4,7 @@
 
 A couple of python scripts that makes having too many playlists more manageable.
 
-Personally, I have 300 different playlists on Spotify and with these tools are meant to facilitate ease of management for that abnormal use case.
+Personally, I have 300 different playlists on Spotify and I write scripts for my abnormal use case.  That's what this project is.
 
 Functionality currently includes being able to search your playlists by artist.
 Searching for playlist and returning average track information is next up for development.
