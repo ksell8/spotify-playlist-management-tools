@@ -104,24 +104,32 @@ def get_stats_json(playlists_list):
         while data["next"]:
             for song in data["items"]:
                 tracks_in_playlist.append(song["track"]["id"])
+            data = get_tracks(playlist, data["next"])
+        if data["items"]:
+            for song in data["items"]:
+                tracks_in_playlist.append(song["track"]["id"])
 
-        #construct query
-        tracks_to_string = list_to_string(tracks_in_playlist)
-        url="https://api.spotify.com/v1/audio_features?ids="+list_to_string
+        #limit on length for now
+        if len(tracks_in_playlist) < 25 and len(tracks_in_playlist) > 0:
 
-        response = requests.get(url, headers=header)
-        data = response.json()
-        features_dict = {}
-        total = len(tracks_in_playlist)
-        for feature in features_to_include:
-            sum = 0
-            #need to figure out how to iterate over this object
 
-            average = sum/total
-            features_dict[feature] = average
+            #construct query
+            tracks_to_string = list_to_string(tracks_in_playlist)
+            url="https://api.spotify.com/v1/audio-features/?ids="+tracks_to_string
 
-        #need to get dict to fill into here
-        stats_dict[playlist] = features_dict
+            response = requests.get(url, headers=header)
+            data = response.json()
+            features_dict = {}
+            total = len(tracks_in_playlist)
+            for feature in features_to_include:
+                sum = 0
+                for song in data["audio_features"]:
+                    sum+=song[feature]
+                average = sum/total
+                features_dict[feature] = average
+
+            #need to get dict to fill into here
+            stats_dict[playlist] = features_dict
     return stats_dict
 
 def list_to_string(list):
@@ -131,17 +139,18 @@ def list_to_string(list):
             str = item
         else:
             str += ","+item
+    return str
 
 
 if __name__ == "__main__":
     try:
         if sys.argv[1] == "artists":
-            playlists_lists = get_playlists()
+            playlists_list = get_playlists()
             artist_dict = get_artists_json(playlists_list)
             with open("artists-on-playlists.json",'w') as f:
                 json.dump(artist_dict, f)
         if sys.argv[1] == "stats":
-            playlists_lists = get_playlists()
+            playlists_list = get_playlists()
             stats_dict = get_stats_json(playlists_list)
             with open("stats-per-playlist.json", "w") as f:
                 json.dump(stats_dict, f)
