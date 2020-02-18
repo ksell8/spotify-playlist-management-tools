@@ -40,7 +40,7 @@ Fill in the client id and client secret on lines 6-7 of get-auth-token.py.
 
     More information about the authorization sequence used in get-auth-token.py can be found in [Spotify's API documentation for client credentials flow](https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow).
 
-##### Generating Data
+### Generating Data
 
 NOTE: Executions of get-playlist-data.py could take some time depending on how many playlists you have!
 
@@ -48,11 +48,11 @@ In order to run the 'Search for Artists Tool' you must generate an artists-on-pl
 
 In order run the the 'Playlist Statistics Retriever' you must generate a names-of-playlists.json and a stats-per-playlists.json.  To do so, call ```python get-playlist-data.py names``` and ```python get-playlist-data.py stats```.
 
-##### Calling the Search for Artists Tool
+### Calling the Search for Artists Tool
 
 Run ```python search-for-artist.py "<insert artist name here>"``` to return the playlists in which the artist occurs.
 
-##### Calling the Playlist Statistics Retriever
+### Calling the Playlist Statistics Retriever
 
 Run ```python retrieve-playlist-stats.py "<insert playlist name here>"``` to return the average energy, liveness, speechiness, acousticness, instrumentalness, and danceability stats for the playlist.
 
