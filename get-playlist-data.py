@@ -3,7 +3,7 @@ import requests, json, os, sys
 token=os.environ.get("SPOTIFY_TOKEN")
 header={"Authorization":"Bearer " + token}
 #edit this to your username!
-user = "ksell8"
+user = ""
 
 def get_playlists():
     url="https://api.spotify.com/v1/users/"+user+"/playlists"
@@ -109,9 +109,9 @@ def get_stats_json(playlists_list):
             for song in data["items"]:
                 tracks_in_playlist.append(song["track"]["id"])
 
-        #limit on length for now
-        if len(tracks_in_playlist) < 25 and len(tracks_in_playlist) > 0:
-
+        ### I have playlist of length 0 called 'Objectively terrible music'
+        ### This is to prevent it from getting through
+        if len(tracks_in_playlist) > 0:
 
             #construct query
             tracks_to_string = list_to_string(tracks_in_playlist)
