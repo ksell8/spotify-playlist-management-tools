@@ -1,4 +1,4 @@
-import requests, json, os, sys
+import requests, json, os, sys, argparse
 
 token=os.environ.get("SPOTIFY_TOKEN")
 header={"Authorization":"Bearer " + token}
@@ -143,23 +143,20 @@ def list_to_string(list):
 
 
 if __name__ == "__main__":
-    try:
-        if sys.argv[1] == "artists":
-            playlists_list = get_playlists()
-            artist_dict = get_artists_json(playlists_list)
-            with open("artists-on-playlists.json",'w') as f:
-                json.dump(artist_dict, f)
-        if sys.argv[1] == "stats":
-            playlists_list = get_playlists()
-            stats_dict = get_stats_json(playlists_list)
-            with open("stats-per-playlist.json", "w") as f:
-                json.dump(stats_dict, f)
-        if sys.argv[1] == "names":
-            names_dict = get_names_json()
-            with open("names-of-playlists.json", "w") as f:
-                json.dump(names_dict, f)
-
-    except:
-        print("Something went wrong here, remember to include artists || stats || names as a param.")
-        raise
-3
+    parser = argparse.ArgumentParser(description="Generate data JSONs about your playlists using Spotify's API.")
+    parser.add_argument('toGenerate', choices=['artists', 'stats', 'names'])
+    args = parser.parse_args()
+    if args.toGenerate == "artists":
+        playlists_list = get_playlists()
+        artist_dict = get_artists_json(playlists_list)
+        with open("artists-on-playlists.json",'w') as f:
+            json.dump(artist_dict, f)
+    if args.toGenerate == "stats":
+        playlists_list = get_playlists()
+        stats_dict = get_stats_json(playlists_list)
+        with open("stats-per-playlist.json", "w") as f:
+            json.dump(stats_dict, f)
+    if args.toGenerate == "names":
+        names_dict = get_names_json()
+        with open("names-of-playlists.json", "w") as f:
+            json.dump(names_dict, f)

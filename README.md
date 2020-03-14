@@ -13,6 +13,8 @@ NOTE: This is setup to manage all playlists you publically follow/own!
 
 ### Environment Setup
 
+The requests library must be installed to your python environment using pip before these scripts can be run.
+
 ##### Spotify API Credentials
 
 First you will have to acquire Spotify API access.  Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
