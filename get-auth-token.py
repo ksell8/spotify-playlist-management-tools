@@ -1,7 +1,7 @@
 import requests, json, os
 
 def get_creds():
-    
+
     #fill in client id and secret here!
     client_id = ''
     client_secret = ''

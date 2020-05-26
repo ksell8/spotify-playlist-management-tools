@@ -30,6 +30,8 @@ def get_playlists_with_artist(id):
             response = requests.get(url, headers=header)
 
             data = response.json()
+
+            print(data["name"])
         return
     print("Artist not found.")
 
