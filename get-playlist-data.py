@@ -27,44 +27,41 @@ def get_playlists():
     return playlist_list
 
 
-def get_tracks(uri,url=''):
+def get_tracks(uri):
     playlist_id = uri
-    if url == '':
-        url="https://api.spotify.com/v1/playlists/"+playlist_id+"/tracks"
+    url="https://api.spotify.com/v1/playlists/"+playlist_id+"/tracks"
 
     response = requests.get(url, headers=header)
+    data = response.json()
+    track_list = []
+    while data["next"]:
+        for song in data["items"]:
+            if not song["track"]["is_local"]:
+                track_list.append(song)
+        url = data["next"]
+        response = requests.get(url, headers=header)
+        data = response.json()
+    if data["items"]:
+        for song in data["items"]:
+            if not song["track"]["is_local"]:
+                track_list.append(song)
 
-    return response.json()
+    return track_list
 
 
 def get_artists_json(playlists_list):
     artist_dict = {}
     for playlist in playlists_list:
-        data = get_tracks(playlist)
-        while data["next"]:
-            for song in data["items"]:
-                for artist in song["track"]["artists"]:
-                    id = artist["id"]
-                    if id in list(artist_dict):
-                        if playlist not in artist_dict[id]:
-                            artist_dict[id].append(playlist)
-                    else:
-                        artist_dict[id] = []
+        track_list = get_tracks(playlist)
+        for song in track_list:
+            for artist in song["track"]["artists"]:
+                id = artist["id"]
+                if id in list(artist_dict):
+                    if playlist not in artist_dict[id]:
                         artist_dict[id].append(playlist)
-            data = get_tracks(playlist, data["next"])
-        if data["items"]:
-            for song in data["items"]:
-                try:
-                    for artist in song["track"]["artists"]:
-                        id = artist["id"]
-                        if id in list(artist_dict):
-                            if playlist not in artist_dict[id]:
-                                artist_dict[id].append(playlist)
-                        else:
-                            artist_dict[id] = []
-                            artist_dict[id].append(playlist)
-                except:
-                    print("you have found the empty playlist, congratulations\n")
+                else:
+                    artist_dict[id] = []
+                    artist_dict[id].append(playlist)
 
     return artist_dict
 
@@ -99,37 +96,40 @@ def get_stats_json(playlists_list):
     #for more information about what can be included https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/ will find the average
     features_to_include = ["danceability","acousticness","energy","instrumentalness","liveness","speechiness"]
     for playlist in playlists_list:
-        data = get_tracks(playlist)
-        tracks_in_playlist = []
-        while data["next"]:
-            for song in data["items"]:
-                tracks_in_playlist.append(song["track"]["id"])
-            data = get_tracks(playlist, data["next"])
-        if data["items"]:
-            for song in data["items"]:
-                tracks_in_playlist.append(song["track"]["id"])
+        track_list = get_tracks(playlist)
+        track_ids = []
+        features_dict = {}
+        for song in track_list:
+            track_ids.append(song["track"]["id"])
 
-        ### I have playlist of length 0 called 'Objectively terrible music'
-        ### This is to prevent it from getting through
-        if len(tracks_in_playlist) > 0:
+        current_pos = 0
+        current_max_length = 100
+        total = len(track_ids)
 
-            #construct query
-            tracks_to_string = list_to_string(tracks_in_playlist)
-            url="https://api.spotify.com/v1/audio-features/?ids="+tracks_to_string
-
-            response = requests.get(url, headers=header)
-            data = response.json()
-            features_dict = {}
-            total = len(tracks_in_playlist)
-            for feature in features_to_include:
-                sum = 0
+        for feature in features_to_include:
+            sum = 0
+            while current_max_length < total:
+                #construct query
+                tracks_to_string = list_to_string(track_ids[current_pos:current_max_length])
+                url="https://api.spotify.com/v1/audio-features/?ids="+tracks_to_string
+                response = requests.get(url, headers=header)
+                data = response.json()
                 for song in data["audio_features"]:
                     sum+=song[feature]
-                average = sum/total
-                features_dict[feature] = average
+                current_pos = current_max_length
+                current_max_length += 100
+            #get remaining/playlists less than max length
+            tracks_to_string = list_to_string(track_ids[current_pos:total-1])
+            url = "https://api.spotify.com/v1/audio-features/?ids="+tracks_to_string
+            response = requests.get(url, headers=header)
+            data = response.json()
+            for song in data["audio_features"]:
+                sum+=song[feature]
 
-            #need to get dict to fill into here
-            stats_dict[playlist] = features_dict
+            average = sum/total
+            features_dict[feature] = average
+        stats_dict[playlist] = features_dict
+
     return stats_dict
 
 def list_to_string(list):
@@ -140,6 +140,7 @@ def list_to_string(list):
         else:
             str += ","+item
     return str
+
 
 
 if __name__ == "__main__":
