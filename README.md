@@ -13,7 +13,7 @@ NOTE: This is setup to manage all playlists you publically follow/own!
 
 ### Environment Setup
 
-The requests library must be installed to your python environment using pip before these scripts can be run.
+To setup your python environment pip install the requirements.txt file.
 
 ##### Spotify API Credentials
 
